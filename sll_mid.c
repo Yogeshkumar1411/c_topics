@@ -1,3 +1,8 @@
+/*
+*Program: single linked list: mid node finding
+*Name: Yogeshkumar S
+*Date: 21/12/2023
+*/
 #include"header.h"
 struct node
 {
