@@ -1,4 +1,8 @@
-//swap 7 and 8
+/*
+*Program: swap 7th and 8th bits in a given number
+*Name: Yogeshkumar S
+*Date: 20/12/2023
+*/
 #include"header.h"
 int main()
 {
