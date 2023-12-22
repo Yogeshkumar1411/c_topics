@@ -1,4 +1,8 @@
-//reverse bits
+/*
+*Program: Reverse bits in a given number
+*Name: Yogeshkumar S
+*Date: 19/12/2023
+*/
 #include"header.h"
 int main()
 {
