@@ -1,3 +1,8 @@
+/*
+*Program: Main function doubly linked list
+*Name: Yogeshkumar S
+*Date: 20/12/2023
+*/
 #include "header.h"
 #include "fun_dll.c"
 
