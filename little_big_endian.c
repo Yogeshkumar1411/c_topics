@@ -1,4 +1,8 @@
-//little-big endian
+/*
+*Program: little to big endian vice versa
+*Name: Yogeshkumar S
+*Date: 19/12/2023
+*/
 #include"header.h"
 int main()
 {
