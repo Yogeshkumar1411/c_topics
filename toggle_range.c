@@ -1,4 +1,8 @@
-//toggle bits in a range
+/*
+*Program: toggle bits in a given range for given number
+*Name: Yogeshkumar S
+*Date: 20/12/2023
+*/
 #include"header.h"
 int main()
 {
