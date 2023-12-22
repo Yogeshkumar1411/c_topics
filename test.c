@@ -1,3 +1,8 @@
+/*
+*Program: little to big endian without using bitwise
+*Name: Yogeshkumar S
+*Date: 21/12/2023
+*/
 #include"header.h"
 int main()
 {
