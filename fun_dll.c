@@ -1,3 +1,8 @@
+/*
+*Program: function definitions
+*Name: Yogeshkumar S
+*Date: 21/12/2023
+*/
 #include "struct_node.h"
 void add_at_last(int data)
 {
