@@ -1,4 +1,8 @@
-//validate ip address
+/*
+*Program: Validating ip adderss; constraints=> no alphabetical, 3 dots, 4 packs of charactes and each pack shoud not exceed 256
+*Name: Yogeshkumar S
+*Date: 20/12/2023
+*/
 #include"header.h"
 int check_ip(char *ip)
 {
