@@ -1,4 +1,8 @@
-//sub mark
+/*
+*Program: subject and mark display using dma, functions, etc.
+*Name: Yogeshkumar S
+*Date: 20/12/2023
+*/
 #include"header.h"
 int prime(int num)
 {
