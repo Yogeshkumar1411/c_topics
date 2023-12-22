@@ -10,3 +10,11 @@ struct node
 	struct node *prev;
 };
 struct node *head;
+
+void add_at_last(int data);
+void print();
+void add_at_beginning(int data);
+void del_last();
+void del_beginning();
+void rev_ll_print();
+void rev_ll();
