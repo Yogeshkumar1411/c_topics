@@ -1,7 +1,7 @@
 /*
 *Program: Main function doubly linked list fun_dll.c has all the fun definitions
 *Name: Yogeshkumar S
-*Date: 20/12/2023
+*Date: 21/12/2023
 */
 #include "header.h"
 #include "fun_dll.c"
