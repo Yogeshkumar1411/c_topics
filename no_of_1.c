@@ -1,4 +1,8 @@
-//no of 1's
+/*
+*Program: number of 1's in given number
+*Name: Yogeshkumar S
+*Date: 21/12/2023
+*/
 #include"header.h"
 int main()
 {
