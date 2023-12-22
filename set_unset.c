@@ -1,4 +1,8 @@
-//set/unset
+/*
+*Program: set and unset 17 and 18 bits, respectively
+*Name: Yogeshkumar S
+*Date: 20/12/2023
+*/
 #include"header.h"
 int main()
 {
