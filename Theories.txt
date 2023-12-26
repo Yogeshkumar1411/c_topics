@@ -1,0 +1,457 @@
+1. What happens when array is passed as a pointer in a function. Print the array from the function.
+	-> Passing an array to the function is known as call by reference. 
+	-> Need to receive either using pointer or array variale.
+	-> Ex. void function(int *ptr) or void function(int a[]).
+	-> But need to mention the size of array while passing arguments. Because the receiver function only pointing or holding the base address.
+	void function(int *ptr,int size)
+	{
+		int i;
+		for(i=0;i<size;i++)
+		{
+			printf("%d\n",ptr[i]);
+		}
+	}
+	int main()
+	{
+		int arr[5] = {1,2,3,4,5};
+		function(arr,sizeof(arr)/sizeof(arr[0]));
+	}
+
+	o/p:
+	1
+	2
+	3
+	4
+	5
+
+
+2. What will happen if you try to access a value which is out of array boundary
+	-> If we try to access the a which is out of boundary, it will give garbage value.
+	-> In above example the size is 5. We can access the value in indexes after 5. But it will give garbage value. Or, it will print the value from other variable's memory has any value.
+
+3. What happens if you try to add an element to array which falls outside the boundary.
+   Example - int A[10], A[21]=11;
+   	->It will some undefined behaviour, because there is no boundary checking for array access in c.
+	->It can modify other variable's memory value or it can lead crash
+
+4. 	
+#include <stdio.h>
+int main() 
+{
+	int x[4]={1,3,5,7};
+	int i;
+	int *ptr;
+	for(i = 0; i < 4; ++i) 
+	{
+	      ptr=&x[i];
+	      printf("x[%d] is %d\n",i,*(ptr+i)); 
+	}
+        return 0;
+}
+What would be the printed?	
+
+	o/p=> x[0] is 1
+	      x[1] is 5
+	      x[2] is garbage
+	      x[3] is garbage
+
+5. What are different bitwise operators.	
+	-> Bitwise AND (&)
+	-> Bitwise OR (|)
+	-> Bitwise XOR (^) 
+	-> Bitwise NOT (~)
+	-> Left shift (<<)
+	-> Right shift (>>)
+
+6. Which bitwise operator is suitable for checking whether a particular bit is on or off
+	-> Bitwise AND
+	-> As per truth table, if the bit is 1 and if do with &1, it will give 1(on) otherwise 0(off)
+
+7. When do we use command line arguments in a program?	
+	-> Want to give the inputs at run time.
+	-> Want to control the program from commandline
+	-> While writing scripting this will be helpful
+
+8. Explain the different Stages of compilation 	
+	a. Preprocess  ->Expanding macro
+		       ->Removing comments
+		       ->Including header files (will get expanded source code - preprocessed source code)
+		       -> .c to .i file
+	b. Compilation ->Converting expanded source code into assembly code
+		       ->Will syntactical error validation happen
+		       ->Human can read this assembly code
+		       ->.i to .s file
+	c. Assembly    ->Converting assembly into object code, which is machine language
+		       ->.s to .o or .out file
+	d. Linking     ->It will combine object files and dynamic library files
+		       ->It will give o/p as executable binary code.
+		       ->.o to .exe
+
+9. When do you get compilation error
+	-> During copilation stage
+	-> Syntax error, missing header file, function handling, undefined symbols.
+
+10. When do you get linking error 	
+	-> if the required dynamic library is not availale, then we will get linker error.
+
+11. What is the difference between Segmentation fault and Bus error
+	->Segmentation fault will occur when the program tries to access the memory that is not supposed to be.
+	->Ex. tring to access read-only memory, dereferencing null pointer, using memory after free
+
+	->Bus error happen when the program tries to perform an unaligned memory access. 
+	->Ex. h/w related issue like fault memory
+
+12. What happens if the same external variable is declared in multiple c file
+	->It is multiple redefinition, in linking stage it will lead error
+
+13. Why makefile is used?
+	->Makefile does the automation of compilation and installation
+	->If we want to compile the source code by the use of makefile we can automate the dependency build process
+	->We can speed up the build process
+	->For example, in a kernel image building, there are lot of source file over the kernel source tree, we cannot simply compile each and every file separately. In this case, we can use makefile build system to get the kernel image.
+
+14. What are the different data structure? Do we've datastructure available as a part of standard library?
+	-> Linked list, stack, queue, tree, array
+	-> For array handling we have <string.h> library.
+
+15. What is dynamic memory allocation and when it is used? 
+	-> malloc, calloc, realloc, free
+	-> malloc()->Allocates memory in a single block, initialize with garbage, returns void pointer, takes only one argument, void *malloc(size_t size)
+	-> calloc()->Allocates memory as specified number of block, initialize with zero, returns void pointer, slower than malloc, takes only two arguments, void *calloc(size_t num,size_t size)
+	-> realloc()-> reallocating memory for previously allocated memories, returns void pointers, the required size should be the addition previous size also, void *realloc(void *ptr,size_t new_size), ptr->previously allocated memory by malloc or calloc.
+	-> free()->used to deallocate all the allocated memory.
+
+	-> For lot of scenarios it is being used. String manipulation, variable array size handling, for structures, for linked list data structure.
+
+16. What happens if allocated memory is nor freed?
+	-> Memory leak will happpen
+	-> Memory out of availability
+	-> debug difficulty
+
+17. What will happen if you try to print a ENUM by using %s in c?
+	-> undefined behavior
+	-> Segmentation fault
+18. Write a program to write and retrieve employee data from a text file. Data to be encrypted and stored.
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define ENCRYPTION_KEY 0x0F  // XOR encryption key
+
+struct Employee {
+    char name[50];
+    int employeeID;
+    float salary;
+};
+
+// Function to encrypt or decrypt data using XOR
+void encryptDecrypt(char *data, size_t length) {
+    for (size_t i = 0; i < length; ++i) {
+        data[i] ^= ENCRYPTION_KEY;
+    }
+}
+
+// Function to write employee data to a file
+void writeEmployeeData(const char *filename, const struct Employee *employee) {
+    FILE *file = fopen(filename, "ab");  // Append to file or create if not exists
+    if (file == NULL) {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
+    }
+
+    // Encrypt data before writing
+    struct Employee encryptedEmployee = *employee;
+    encryptDecrypt(encryptedEmployee.name, sizeof(encryptedEmployee.name));
+
+    fwrite(&encryptedEmployee, sizeof(struct Employee), 1, file);
+
+    fclose(file);
+}
+
+// Function to read and decrypt employee data from a file
+void readEmployeeData(const char *filename) {
+    FILE *file = fopen(filename, "rb");
+    if (file == NULL) {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
+    }
+
+    struct Employee employee;
+    while (fread(&employee, sizeof(struct Employee), 1, file) == 1) {
+        // Decrypt data after reading
+        encryptDecrypt(employee.name, sizeof(employee.name));
+
+        // Print the decrypted data
+        printf("Name: %s\n", employee.name);
+        printf("Employee ID: %d\n", employee.employeeID);
+        printf("Salary: %.2f\n", employee.salary);
+        printf("\n");
+    }
+
+    fclose(file);
+}
+
+int main() {
+    // Employee data
+    struct Employee emp1 = {"John Doe", 101, 50000.0};
+    struct Employee emp2 = {"Alice Smith", 102, 60000.0};
+
+    // Write employee data to a file
+    writeEmployeeData("employee_data.txt", &emp1);
+    writeEmployeeData("employee_data.txt", &emp2);
+
+    // Read and print employee data from the file
+    printf("Employee Data:\n");
+    readEmployeeData("employee_data.txt");
+
+    return 0;
+}
+
+
+19. What happens if static variable is passed as reference or value in a function? 	
+	-> it act like as auto variable
+	-> if paased as a reference the updation and changes will affect the actual argument variable, but pass by value it is not the case.
+	-> if static is declared as global, there is no meaning of call by reference or call by value.
+
+20. Can we pass any parameter and return a value from the ISR 	
+	-> It is better to use global volatile or static variables.
+	-> Most of the controllers have predefined ISR functions. Most of them doesn't receive any value and doesn't return any value.
+21. What is a static function? 	
+	-> Declaring scope of that particular function
+	-> Cannot access this function outside of the file.
+
+22. What is an inline function?When do you use inline functions?	
+	-> Like macro, the called function will be expanded inside wherever it is being called.
+	-> "inline" keyword we should use.
+	-> The function should be small
+	-> It will improve the performance, it is eliminating the function calls, creation of stack, parameter passing.
+
+23.What is a recursion function.	
+	-> A recursive function is a function in computer programming that calls itself during its execution. Recursive functions are defined in terms   of themselves and solve a problem by breaking it down into smaller instances of the same problem. Each recursive call represents a smaller or simpler version of the original problem, and the recursion continues until a base case is reached, at which point the function returns a result without making further recursive calls.
+	
+	Base Case:
+	A base case is a condition that, when met, signals the recursive function to stop calling itself and return a result. It prevents infinite recursion and ensures that the function eventually reaches a termination point.
+	
+	Recursive Call:
+	The function calls itself with a set of parameters, usually modified in a way that moves towards the base case. This is the essence of recursion—solving a problem by solving smaller instances of the same problem.
+	
+	Memory Usage:
+	Recursive functions use the call stack to keep track of the sequence of function calls. Each recursive call adds a new stack frame, and these frames are popped off the stack as the base cases are reached.
+	
+	#include <stdio.h>
+	// Recursive function to calculate factorial
+	int factorial(int n) {
+		// Base case
+		if (n == 0 || n == 1) {
+			return 1;
+		} else {
+			// Recursive call
+			return n * factorial(n - 1);
+		}
+	}
+
+	int main() {
+		int num = 5;
+		printf("Factorial of %d is: %d\n", num, factorial(num));
+		return 0;
+	}
+	
+24. Can a pointer be returned from a function?	
+		->Yes, but it should not be the local auto variable. Because, at the end of the function the stack will be deleted, so the address of the local variables also will gone.
+		-> If we use DMA then we can return the pointer. The memory won't get delete untill we manually freed it.
+		
+25. How do you measure interrupt latency?	
+		->Interrupt latency is the time delay between the occurrence of an external interrupt and the start of the execution of the corresponding Interrupt Service Routine (ISR). Measuring interrupt latency is crucial in real-time systems where the response time to external events is critical.
+		
+		-> use one pin on a GPIO interface to generate the interrupt. This pin can be monitored on the ‘scope. At the start of the interrupt service routine, another pin, which is also being monitored, is toggled. The interval between the two signals may be easily read from the instrument.
+
+26. What is NVIC in ARM Cortex?
+		->A nested vectored interrupt controller is used to manage the interrupts from multiple interrupt sources. NVIC is closely integrated with the processor core to achieve low-latency interrupt processing and efficient processing of late-arriving interrupts. Arm cortex M controllers are using this NVIC
+		
+		Interrupt Prioritization:
+		The NVIC allows for the prioritization of interrupt requests. Each interrupt source is assigned a priority level, and the NVIC ensures that higher-priority interrupts are serviced before lower-priority interrupts.
+
+		Vector Table:
+		The NVIC uses a vector table to store the addresses of interrupt service routines (ISRs) for different interrupt sources. When an interrupt occurs, the processor looks up the corresponding ISR address in the vector table and jumps to that address to execute the ISR.
+
+		Interrupt Vectors:
+		Each interrupt source in the NVIC has a unique interrupt vector associated with it. The interrupt vectors are addresses in the vector table where the ISR addresses are stored.
+
+		Interrupt Enable and Disable:
+		The NVIC allows the enabling and disabling of interrupts. Interrupts can be globally enabled or disabled using the CPSIE (Enable Interrupts) and CPSID (Disable Interrupts) instructions.
+
+		Interrupt Control:
+		The NVIC provides instructions to set and clear the pending status of interrupts, allowing software to control the triggering of interrupts.
+
+		Interrupt Nesting:
+		The NVIC supports interrupt nesting, meaning that a higher-priority interrupt can interrupt the processing of a lower-priority interrupt. The processor maintains a priority-based hierarchy, and the NVIC ensures that the interrupt with the highest priority that is currently pending is serviced first.
+
+		System Exception Handling:
+		The NVIC also handles system exceptions, such as reset, fault, and non-maskable interrupt (NMI). These exceptions have fixed priorities and are managed by the NVIC.
+
+		Dynamic Priority Adjustment:
+		Some Cortex-M processors support dynamic priority adjustment, allowing software to change the priority of an interrupt at runtime.
+
+27. Can we change the interrupt priority level of the Cortex-M processor family? 	
+		Yes, it is possible to change the interrupt priority level in the Cortex-M processor family. The Cortex-M architecture supports a flexible interrupt priority system that allows you to assign priority levels to different interrupt sources. The NVIC (Nested Vectored Interrupt Controller) manages the interrupt priority system.
+		
+28. Is it safe to call printf() inside Interrupt Service Routine (ISR)?
+		->No, the ISR shouldn't be time taken. The printf() function is a standard library function that involves complex operations, such as formatting and printing characters to an output stream. These operations can be time-consuming and may lead to various issues when called within an ISR, especially in real-time and embedded systems
+		
+29. Explain the interrupt execution sequence?	
+		Step 1 − First device issues interrupt to CPU.
+
+		Step 2 − Then, the CPU finishes execution of current instruction.
+
+		Step 3 − CPU tests for pending interrupt request. If there is one, it sends an acknowledgment to the device which removes its interrupt signal.
+
+		Step 4 − CPU saves program status word onto control stack.
+
+		Step 5 − CPU loads the location of the interrupt handler into the PC register.
+
+		Step 6 − Save the contents of all registers from the control stack into memory.
+
+		Step 7 − Find out the cause of interrupt, or interrupt type or invokes appropriate routine.
+
+		Step 8 − Restore saved registers from the stack.
+
+		Step 9 − Restore PC to dispatch the original process.
+
+30. What are the causes of Interrupt Latency?	
+		-> Current instruction completion
+		-> Context switching
+		-> Priority inversion
+	
+31. Can we use any function inside ISR?	
+		->The use of functions inside an Interrupt Service Routine (ISR) is generally discouraged, especially for complex or time-consuming functions. An ISR is designed to be a fast and responsive piece of code that quickly handles the specific task associated with an interrupt
+		
+		->Generally, there is nothing stopping you from calling a function from an ISR. There are however some things to consider.
+		First of all, you should keep ISRs as short as possible. Even the function call overhead might be considered too much in some cases. So if you call functions from inside an ISR, it might be wise to inline those functions.
+		
+32. What is ISR 	
+		-> ISR stands for "Interrupt Service Routine." An ISR is a special type of subroutine or function in computer programming that is designed to handle interrupts. An interrupt is a mechanism by which a hardware or software component can interrupt the normal execution of a program to transfer control to a specific piece of code, which is the ISR. ISRs are crucial in real-time systems and embedded systems, where timely responses to external events are essential.
+
+33. What are the different Modifiers and qualifiers in C	
+		Modifiers:
+			signed, unsigned, short, long
+		Qualifiers:
+			const, volatile
+			
+34. Which loop is better FOR or WHILE loop? Which one is more efficient? How do you decide which loop to use.	
+		->The choice between a for loop and a while loop in C depends on the specific requirements of your code. Both loops serve similar purposes, and their efficiency is generally comparable. The decision on which loop to use often comes down to readability and the specific control flow needs of the loop.
+		
+35. How Macros work. What are the standard macros available as a part of standard C library. How macros are taken into consideration during compilation.
+		->Macros in C are a way to define and use reusable code snippets or constants. They are processed by the preprocessor before the actual compilation takes place. Macros are typically defined using the #define preprocessor directive.
+		
+		standard macros:
+		->__FILE__
+		->__LINE__
+		->__func__
+		->__STDC__
+		->__STDC_VERSION__
+		
+		->Macros will be substituted in the text during preprocessing stage.
+		
+36. multi-line Macros
+		->A multi-line macro allows you to create a more complex and reusable code block. In C/C++, you can define a multi-line macro by using the backslash ( \ ) at the end of each line to continue the macro definition on the next line.
+	
+37. #include <stdio.h>
+#define MIN(a,b) ((a)>(b)?(a):(b))
+void main() ​
+{  ​
+   printf("The number is: %d\n", MIN(10,20));    ​
+}
+What would be printed?
+
+	->10
+
+38.Write a program using the below
+_DATE_
+_TIME_
+_FILE_
+_LINE_
+_STDC_
+
+
+		#include <stdio.h>
+  int main() {
+    // Using predefined macros
+    printf("Date: %s\n", __DATE__);
+    printf("Time: %s\n", __TIME__);
+    printf("File: %s\n", __FILE__);
+    printf("Line: %d\n", __LINE__);
+    
+    #ifdef __STDC__
+        printf("The compiler is in ANSI/ISO standard mode.\n");
+    #else
+        printf("The compiler is not in ANSI/ISO standard mode.\n");
+    #endif
+
+    return 0;
+}
+
+39. How do you use float variable in MCU?	
+
+
+40. Explain memory layout in C and how different variables are stored. What is reason for initializing and not initializing variables in memory 	
+
+	Code->object code will store here
+	data->global and static variable, unintialized variables initialized with 0.
+	stack->function local variable, each function call will create stack frame, uninitialized variables intialized with garbage value, memory deallocated when the function exits.
+	heap->dynamically allocated memory, memory managed by malloc(), calloc(), realloc(), free() functions.
+	
+41. Stack overflow?
+	A stack overflow occurs when the call stack of a program exceeds its available stack space. The call stack is a region of memory used to manage function calls and local variables during program execution. Each time a function is called, information about the function's state, including local variables and the return address, is pushed onto the stack. When the function completes, this information is popped off the stack.
+
+42. What is the cause of the stack overflow 	
+	1. Infinite loops
+	2. Infinite recursion
+	3. Using excessive local variable.
+	
+	
+43. How you can access memory from hardware point. Demonstrate using program 
+
+	->Accessing memory from a hardware perspective involves dealing with memory-mapped registers and direct memory access (DMA) in embedded systems or systems programming. Directly manipulating memory in this way requires caution, as incorrect accesses can lead to system instability or crashes. Below is a simple example using C on an embedded platform to illustrate basic memory access. Please note that this example assumes you are working in an embedded environment, and the specific details may vary depending on the hardware and compiler used.
+	
+	#include <stdint.h>
+
+// Memory-mapped register addresses (example addresses, vary based on your hardware)
+#define GPIO_BASE_ADDRESS 0x40000000
+#define GPIO_DATA_OFFSET  0x00
+#define GPIO_DIR_OFFSET   0x04
+
+
+int main() {
+    // Example: Access GPIO registers
+
+    // Set GPIO_BASE_ADDRESS to the base address of your GPIO peripheral
+    uint32_t gpioBaseAddress = GPIO_BASE_ADDRESS;
+
+    // Access the GPIO data register
+    uint32_t *gpioDataRegister = (uint32_t *)(gpioBaseAddress + GPIO_DATA_OFFSET);
+
+    // Access the GPIO direction register
+    uint32_t *gpioDirRegister = (uint32_t *)(gpioBaseAddress + GPIO_DIR_OFFSET);
+
+
+    return 0;
+}
+
+
+44. What are the different addressing modes 	
+	Implied Mode
+	Immediate Mode
+	Register Mode
+	Register Indirect Mode
+	Autodecrement Mode
+	Autoincrement Mode
+	Direct Address Mode
+	Indirect Address Mode
+	Indexed Addressing Mode
+	
+
+
+
+
+		
+
